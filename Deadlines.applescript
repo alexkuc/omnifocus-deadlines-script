@@ -16,31 +16,35 @@ tell application "OmniOutliner"
 		
 		set title of second column to "Project Name"
 		
-		make new column with properties {title:"Project Due Date", column type:datetime}
+		make new column with properties {title:"Project Due Date", column type:datetime, alignment:center}
 		
-		make new column with properties {title:"Time Left", column type:numeric, column format:{id:"no-thousands-no-decimal"}, sort order:ascending}
+		make new column with properties {title:"Time Left", column type:numeric, column format:{id:"no-thousands-no-decimal"}, sort order:ascending, alignment:center}
 		
 		repeat with thisProject in (flattened projects of default document whose status is active and due date is not missing value)
 			
-			if text of second cell of first row is equal to "" then
+			if defer date of thisProject ² currentDate then
 				
-				set newRow to first row
+				if text of second cell of first row is equal to "" then
+					
+					set newRow to first row
+					
+				else
+					
+					set newRow to make new row at end of (parent of last row)
+					
+				end if
 				
-			else
+				set text of second cell of newRow to name of thisProject
 				
-				set newRow to make new row at end of (parent of last row)
+				set value of attribute named "link" of style of text of second cell of newRow to "omnifocus:///task/" & id of thisProject
+				
+				set value of third cell of newRow to due date of thisProject as date
+				
+				set timeLeft to ((due date of thisProject) - currentDate) / 3600 / 24 as integer
+				
+				set value of fourth cell of newRow to timeLeft
 				
 			end if
-			
-			set text of second cell of newRow to name of thisProject
-			
-			set value of attribute named "link" of style of text of second cell of newRow to "omnifocus:///task/" & id of thisProject
-			
-			set value of third cell of newRow to due date of thisProject as date
-			
-			set timeLeft to ((due date of thisProject) - currentDate) / 3600 / 24 as integer
-			
-			set value of fourth cell of newRow to timeLeft
 			
 		end repeat
 		
