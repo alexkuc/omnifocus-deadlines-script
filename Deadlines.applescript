@@ -16,9 +16,7 @@ tell application "OmniOutliner"
 		
 		set title of second column to "Project Name"
 		
-		make new column with properties {title:"Project Due Date", column type:datetime, alignment:center}
-		
-		make new column with properties {title:"Time Left", column type:numeric, column format:{id:"no-thousands-no-decimal"}, sort order:ascending, alignment:center}
+		make new column with properties {title:"Days Left", column type:numeric, column format:{id:"no-thousands-no-decimal"}, sort order:ascending, alignment:center}
 		
 		repeat with thisProject in (flattened projects of default document whose status is active and due date is not missing value)
 			
@@ -37,12 +35,10 @@ tell application "OmniOutliner"
 				set text of second cell of newRow to name of thisProject
 				
 				set value of attribute named "link" of style of text of second cell of newRow to "omnifocus:///task/" & id of thisProject
-				
-				set value of third cell of newRow to due date of thisProject as date
-				
+								
 				set timeLeft to ((due date of thisProject) - currentDate) / 3600 / 24 as integer
 				
-				set value of fourth cell of newRow to timeLeft
+				set value of third cell of newRow to timeLeft
 				
 			end if
 			
