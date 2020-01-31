@@ -6,3 +6,5 @@ This OmniFocus script exports flat list of active projects to OmniOutliner showi
 
 * Copy script to OmniFocus scripts folder
 * Drag script's icon to toolbar
+
+>**Warning** don't forget to set the encoding to `MacRoman` if you are going to edit the script **Warning**
