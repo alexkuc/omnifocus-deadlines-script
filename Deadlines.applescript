@@ -1,3 +1,13 @@
+set includeStartDate to true
+
+set includeEndDate to false
+
+(*
+
+Separate user settings from rest of the script
+
+*)
+
 use application "OmniFocus"
 
 use scripting additions
@@ -22,11 +32,17 @@ tell application "OmniOutliner"
 	
 	tell front document
 		
+		if includeStartDate is false then
+			
+			set currentDate to currentDate + (1 * days)
+			
+		end if
+		
 		set title of second column to "Project Name"
 		
 		make new column with properties {title:"Days Left", column type:numeric, column format:{id:"no-thousands-no-decimal"}, sort order:ascending, alignment:center}
 		
-		repeat with thisProject in (flattened projects of default document whose status is active and due date is not missing value)
+		repeat with thisProject in (flattened projects of default document whose status is active status and due date is not missing value)
 			
 			if defer date of thisProject ² currentDate then
 				
@@ -43,8 +59,16 @@ tell application "OmniOutliner"
 				set text of second cell of newRow to name of thisProject
 				
 				set value of attribute named "link" of style of text of second cell of newRow to "omnifocus:///task/" & id of thisProject
-								
-				set timeLeft to ((due date of thisProject) - currentDate) / 3600 / 24 as integer
+				
+				set dueDate to due date of thisProject
+				
+				if includeEndDate is false then
+					
+					set dueDate to dueDate - (1 * days)
+					
+				end if
+				
+				set timeLeft to (dueDate - currentDate) / 3600 / 24 as integer
 				
 				set value of third cell of newRow to timeLeft
 				
